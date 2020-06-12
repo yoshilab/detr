@@ -111,6 +111,7 @@ class ConvertCocoPolysToMask(object):
 
         return image, target
 
+train_dataset_keys = ['train', 'ep', 'trainval']
 
 def make_coco_transforms(image_set):
 
@@ -121,7 +122,8 @@ def make_coco_transforms(image_set):
 
     scales = [480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800]
 
-    if image_set == 'train':
+    if image_set in train_dataset_keys:
+    #if image_set == 'train' or image_set == 'ep':
         return T.Compose([
             T.RandomHorizontalFlip(),
             T.RandomSelect(
@@ -151,6 +153,8 @@ def build(image_set, args):
     PATHS = {
         "train": (root / "train2017", root / "annotations" / f'{mode}_train2017.json'),
         "val": (root / "val2017", root / "annotations" / f'{mode}_val2017.json'),
+        "ep": (root / "images" / "train", root / "annotations" / f'{mode}_train.json'),
+        'trainval': (root / 'images' / 'trainval35k', root / 'annotations' / f'{mode}_trainval35k.json')
     }
 
     img_folder, ann_file = PATHS[image_set]

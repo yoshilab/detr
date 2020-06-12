@@ -139,8 +139,18 @@ def main(args):
                                   weight_decay=args.weight_decay)
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, args.lr_drop)
 
-    dataset_train = build_dataset(image_set='train', args=args)
-    dataset_val = build_dataset(image_set='val', args=args)
+    if not True:
+        dataset_train = build_dataset(image_set='ep', args=args)
+        dataset_val = build_dataset(image_set='ep', args=args)
+    else:
+        if not True:
+            dataset_train = build_dataset(image_set='train', args=args)
+            dataset_val = build_dataset(image_set='val', args=args)
+        else:
+            dataset = build_dataset(image_set='trainval', args=args)
+            n_train = int(len(dataset) * (90 / 100))
+            n_val = len(dataset) - n_train
+            dataset_train, dataset_val = torch.utils.data.random_split(dataset, [n_train, n_val])
 
     if args.distributed:
         sampler_train = DistributedSampler(dataset_train)
